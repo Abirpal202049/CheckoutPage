@@ -1,0 +1,29 @@
+{
+  "name": "checkout-page",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.14.2",
+    "next": "14.0.4",
+    "react": "^18",
+    "react-confetti": "^6.1.0",
+    "react-creditcard-validator": "^1.0.6",
+    "react-dom": "^18",
+    "react-use": "^17.4.2",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.4",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0"
+  }
+}
