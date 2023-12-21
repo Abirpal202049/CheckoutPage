@@ -8,7 +8,7 @@ import { useCreditCardValidator, images } from "react-creditcard-validator";
 import AddressModal from "./AddressModal";
 import { useForm } from "react-hook-form";
 import useAddressStore from "@/store/addressStore";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 const paymentOptionImage = {
   UPI: {
@@ -22,16 +22,15 @@ const paymentOptionImage = {
 };
 
 export default function CheckoutSection() {
-  const { handleSubmit, register, reset} = useForm();
+  const { handleSubmit, register, reset } = useForm();
 
-  
   function expDateValidate(month, year) {
     if (Number(year) > 2035) {
       return "Expiry Date Year cannot be greater than 2035";
     }
     return;
   }
-  
+
   const {
     getCardNumberProps,
     getCardImageProps,
@@ -39,25 +38,28 @@ export default function CheckoutSection() {
     getExpiryDateProps,
     meta: { erroredInputs },
   } = useCreditCardValidator({ expiryDateValidator: expDateValidate });
-  
+
   const paymentOption = useCartStore((state) => state.paymentMethod);
   const [currentPaymentOption, setCurrentPaymentOption] = useState(
     paymentOption[0]
-    );
-    const [modalOpen, setModalOpen] = useState(false);
-    const payableAmount = useCartStore((state) => state.payableAmount);
-    const allAddress = useAddressStore((state) => state.address);
-    
-    console.log("JSON ADDRESS DATA: ", allAddress);
-    const [selectedAddress, setSelectedAddress] = useState(allAddress[0]?.house_name || "");
+  );
+  const [modalOpen, setModalOpen] = useState(false);
+  const payableAmount = useCartStore((state) => state.payableAmount);
+  const allAddress = useAddressStore((state) => state.address);
 
+  console.log("JSON ADDRESS DATA: ", allAddress);
+  const [selectedAddress, setSelectedAddress] = useState(
+    allAddress[0]?.house_name || ""
+  );
 
-    const onSubmit = (data) => {
-      const filterAddress = allAddress.filter((address) => address.house_name === selectedAddress)[0]
-      console.log("Main Data ", {data, filterAddress});
-      reset();
-      toast.success('Payment Successful');
-    };
+  const onSubmit = (data) => {
+    const filterAddress = allAddress.filter(
+      (address) => address.house_name === selectedAddress
+    )[0];
+    console.log("Main Data ", { data, filterAddress });
+    reset();
+    toast.success("Payment Successful");
+  };
 
   return (
     <div className="xl:w-[50%] bg-skin-background relative overflow-auto">
@@ -229,16 +231,26 @@ export default function CheckoutSection() {
                 <div class="max-h-80 overflow-auto mt-2 mb-5 border rounded-xl p-4 border-skin-foreground/20 flex flex-col gap-y-5">
                   {allAddress.map((address, index) => {
                     return (
-                      <div onClick={() => setSelectedAddress(address.house_name)} key={index} className={`flex cursor-pointer border-2 flex-col gap-y-2 ${selectedAddress === address.house_name ? "border-skin-primary" : "border-transparent"} p-3 rounded-xl`}>
+                      <div
+                        onClick={() => setSelectedAddress(address.house_name)}
+                        key={index}
+                        className={`flex cursor-pointer border-2 flex-col gap-y-2 ${
+                          selectedAddress === address.house_name
+                            ? "border-skin-primary"
+                            : "border-transparent"
+                        } p-3 rounded-xl`}
+                      >
                         <div className="flex items-center gap-x-3">
                           <h1 className="font-semibold text-lg">
                             {address.house_name}
                           </h1>
 
                           <div className="flex-1">
-                            {address.tag && (<div className="font-medium w-fit border-skin-primary text-skin-primary uppercase border rounded px-3 text-sm ">
-                              {address.tag}
-                            </div>)}
+                            {address.tag && (
+                              <div className="font-medium w-fit border-skin-primary text-skin-primary uppercase border rounded px-3 text-sm ">
+                                {address.tag}
+                              </div>
+                            )}
                           </div>
 
                           {/* <div className="text-blue-500 font-medium cursor-pointer hover:text-blue-500/80 transition-all duration-200 hover:scale-95 pr-3 border-r border-skin-foreground/30">
@@ -248,16 +260,14 @@ export default function CheckoutSection() {
                           <div className="text-red-500 font-medium cursor-pointer hover:text-red-500/80 transition-all duration-200 hover:scale-95 ">
                             Remove
                           </div> */}
-
-
                         </div>
 
                         <div className="text-sm text-skin-foreground/60">
                           {address.address}
                         </div>
                         <div className="text-sm text-skin-foreground/60">
-                          {address.city}, {address.state}, {address.country}{" "}
-                          - {address.pincode}
+                          {address.city}, {address.state}, {address.country} -{" "}
+                          {address.pincode}
                         </div>
                       </div>
                     );
@@ -302,11 +312,14 @@ export default function CheckoutSection() {
             </label>
           </div>
 
-          <div type="submit" className="bg-skin-primary py-3 font-bold rounded-xl mt-6 text-center">
-            <button className="text-skin-primary-foreground text-base">
+          <button className="text-skin-primary-foreground text-base">
+            <div
+              type="submit"
+              className="bg-skin-primary py-3 font-bold rounded-xl mt-6 text-center"
+            >
               Pay ${payableAmount.toFixed(2)}
-            </button>
-          </div>
+            </div>
+          </button>
         </form>
       </div>
     </div>
