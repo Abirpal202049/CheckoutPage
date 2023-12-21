@@ -5,7 +5,7 @@ import Card from "../../public/icons/card.svg";
 import UPI from "../../public/icons/upi.svg";
 import { useState } from "react";
 import { useCreditCardValidator, images } from "react-creditcard-validator";
-import Close from '../../public/icons/close-circle.svg'
+import AddressModal from "./AddressModal";
 
 const paymentOptionImage = {
   UPI: {
@@ -39,26 +39,26 @@ export default function CheckoutSection() {
     paymentOption[0]
   );
   const [modalOpen, setModalOpen] = useState(false);
+
+  const payableAmount = useCartStore((state) => state.payableAmount);
+
   return (
     <div className="w-[50%] bg-skin-background relative overflow-auto">
+      {/* New Address Pop Up */}
       {modalOpen && (
         <>
           {/* Overlay */}
           <div
-            className="fixed top-0 left-0 right-0 bottom-0 bg-skin-background/80"
+            className="fixed top-0 left-0 right-0 bottom-0 bg-skin-background/80 z-40"
             onClick={() => setModalOpen(false)}
           ></div>
-          <div className="fixed w-[500px] bg-skin-background border rounded-xl border-skin-foreground/20 left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] shadow">
-            <div className="p-3 px-5 border-b border-skin-foreground/20 flex items-center">
-              <h1 className="text-base font-medium flex-1">Add New Address</h1>
-              <Close className="w-5 stroke-skin-foreground/30 stroke-2 hover:stroke-skin-foreground transition-all duration-200" />
-            </div>
-            <div className="px-5 p-3">
 
-            </div>
-          </div>
+          {/* Address Modal */}
+          <AddressModal setModalOpenFunc={setModalOpen} />
         </>
       )}
+
+      {/* Checkout Form */}
       <div className="max-w-[768px] h-full bg-slate-100/0 left-0 top-0 bottom-0 p-20 bg-skin-background">
         <form className="flex flex-col pb-10">
           <InputField
@@ -194,16 +194,41 @@ export default function CheckoutSection() {
             </div>
           </div>
 
-          <div className="flex gap-x-3">
-            <input type="checkbox" name="" id="" />
-            <span className="flex-1 text-skin-foreground/60">
+          <div className="inline-flex items-center ">
+            <label
+              className="relative flex items-center rounded-full cursor-pointer"
+              htmlFor="billing_and_shipping"
+            >
+              <input
+                type="checkbox"
+                className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-skin-bg-skin-primary checked:bg-skin-primary checked:before:bg-skin-primary hover:before:opacity-10"
+                id="billing_and_shipping"
+              />
+              <span className="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3.5 w-3.5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-width="1"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </span>
+            </label>
+            <label className="ml-2" htmlFor="billing_and_shipping">
               Billing address is same as shipping
-            </span>
+            </label>
           </div>
 
           <div className="bg-skin-primary py-3 font-bold rounded-xl mt-6 text-center">
             <button className="text-skin-primary-foreground text-base">
-              Pay $51.00
+              Pay ${payableAmount.toFixed(2)}
             </button>
           </div>
         </form>

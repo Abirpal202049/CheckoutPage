@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import Background from "../../public/icons/background.svg";
 import Cart from "../../public/icons/shopping-cart.svg";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
 export default function Home() {
   const setCart = useCartStore((state) => state.setCart);
@@ -53,11 +54,10 @@ export default function Home() {
       setCart(data.products);
       setPaymentMethods(data.paymentMethods);
     }
-    
   }, [isLoading]);
 
   return (
-    <div className="flex h-[calc(100vh-85px)]">
+    <div className="flex h-[calc(100vh-81px)]">
       {cart.length > 0 ? (
         <>
           <CartSection />

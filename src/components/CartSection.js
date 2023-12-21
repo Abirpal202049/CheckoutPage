@@ -6,6 +6,7 @@ import useCartStore from "@/store/cartStore";
 import { useEffect, useState } from "react";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
+import ErrorIcon from "../../public/icons/info-circle.svg";
 
 const shippingCost = 8;
 const validDiscountCodes = [
@@ -21,19 +22,23 @@ export default function CartSection() {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [discountPlaceholder, setDiscountPlaceholder] = useState("");
   const [isExploding, setIsExploding] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const calculateTotal = useCartStore((state) => state.totalAmount);
   const payableAmount = useCartStore((state) => state.payableAmount);
   const setPayableAmount = useCartStore((state) => state.setPayableAmount);
   console.log("AMOUNT ", calculateTotal);
 
-  const applyDiscount = () => {
+  const applyDiscount = (e) => {
     try {
+      e.preventDefault();
       if (discountCode) {
         // Match weather the discount code is present in the validDiscountCodes
         const discountCodeMatch = validDiscountCodes.find(
           (item) => item.code === discountCode.toUpperCase()
         );
+
+        // If the discount code matches then apply the discount
         if (discountCodeMatch) {
           setPayableAmount(
             calculateTotal +
@@ -51,6 +56,13 @@ export default function CartSection() {
             setIsExploding(false);
           }, 6000);
           setIsExploding(true);
+          setDiscountCode("");
+        } else {
+          setTimeout(() => {
+            setErrorMessage("");
+          }, 6000);
+          setErrorMessage("Invalid Discount Code");
+          setDiscountCode("");
         }
       }
     } catch (error) {
@@ -78,7 +90,8 @@ export default function CartSection() {
         <CartList />
 
         {/* Discount Code */}
-        <div className="border-b-2 border-skin-foreground/10 pb-8">
+
+        <form className="border-b-2 border-skin-foreground/10 pb-8 flex flex-col">
           <label htmlFor="discountCode" className="text-lg font-semibold ">
             Discount Code
           </label>
@@ -93,16 +106,24 @@ export default function CartSection() {
               id="discountCode"
               className="bg-transparent flex-1 placeholder:font-medium placeholder:text-skin-foreground/30 focus:outline-0 font-medium uppercase"
             />
-            <span
+            <button
+              disabled={!discountCode ? true : false}
+              type="submit"
               onClick={applyDiscount}
-              className="text-skin-primary font-medium cursor-pointer hover:text-skin-primary/80 transition-all duration-200 hover:scale-95"
+              className="text-skin-primary disabled:text-skin-primary/60 font-medium cursor-pointer hover:text-skin-primary/80 transition-all duration-200 hover:scale-95"
             >
               Apply
-              {/* ----------- */}
-              {/* {isExploding && <Confetti width={width} height={height} />} */}
-            </span>
+            </button>
           </div>
-        </div>
+          {errorMessage ? (
+            <small className="text-red-500 -mt-1 font-medium flex items-center gap-x-2">
+              <ErrorIcon />
+              {errorMessage}
+            </small>
+          ) : (
+            <small className="h-[21px] -mt-1 "></small>
+          )}
+        </form>
 
         {/* Total */}
         <div className="py-6 text-base font-normal flex flex-col gap-y-3 border-b-2 border-skin-foreground/10">
