@@ -6,9 +6,10 @@ import { useEffect } from "react";
 import Background from "../../public/icons/background.svg";
 import Cart from "../../public/icons/shopping-cart.svg";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const setCart = useCartStore((state) => state.setCart);
   const cart = useCartStore((state) => state.cart);
   const setPaymentMethods = useCartStore((state) => state.setPaymentMethod);
@@ -26,20 +27,8 @@ export default function Home() {
     },
   });
 
-  const updateCartState = async () => {
-    try {
-      console.log("Data of Cart ", data);
-      const totalPayableAmount = data.products.reduce(
-        (acc, item) => acc + item.price * item.quantity,
-        0
-      );
-      console.log("Total Payment Amount", totalPayableAmount);
-      setTotalAmount(totalPayableAmount);
-      setCart(data.products);
-      setPaymentMethods(data.paymentMethods);
-    } catch (error) {
-      console.log("Error fetching CartList", error);
-    }
+  const refreshData = () => {
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -57,7 +46,7 @@ export default function Home() {
   }, [isLoading]);
 
   return (
-    <div className="flex h-[calc(100vh-81px)]">
+    <div className="flex h-[calc(100vh-83px)]">
       {cart.length > 0 ? (
         <>
           <CartSection />
@@ -66,7 +55,7 @@ export default function Home() {
       ) : (
         <>
           <div className="flex relative items-center justify-center w-full">
-            <div className="bottom-0 absolute left-0 right-0">
+            <div className="bottom-0 absolute left-0 right-0 -z-10">
               <Background className="w-[100%]" />
             </div>
 
@@ -76,8 +65,23 @@ export default function Home() {
               </>
             ) : (
               <div className="flex items-center -gap-x-10">
-                <Cart className="w-12 stroke-skin-foreground" />
-                <h1 className="text-2xl text-skin-foreground">Cart is Empty</h1>
+                <div className="flex flex-col text-center justify-center items-center gap-y-5">
+                  <div className="flex items-center">
+                    <Cart className="w-16 stroke-skin-foreground stroke-2 stroke-skin-primary" />
+
+                    <h1 className="text-2xl text-skin-foreground">
+                      Cart is Empty
+                    </h1>
+                  </div>
+                  {/* Add a reload -> Start shopping */}
+
+                  <button
+                    className="rounded-xl bg-skin-primary px-28 py-3 text-center text-lg font-semibold shadow-sm text-skin-primary-foreground hover:bg-skin-primary/80 hover:text-skin-foreground transition-all duration-200 "
+                    onClick={refreshData}
+                  >
+                    Reload
+                  </button>
+                </div>
               </div>
             )}
           </div>

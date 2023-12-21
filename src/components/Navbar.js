@@ -11,7 +11,7 @@ export default function Navbar() {
   const logoName = useGlobalStore((state) => state.merchantName);
 
   return (
-    <div className="border-b border-skin-foreground border-opacity-10 ">
+    <div className="border-b border-skin-foreground border-opacity-10 px-5">
       <div className="container mx-auto">
         <div className="flex py-5 items-center">
           <div className="flex flex-1 items-center gap-x-3 select-none">

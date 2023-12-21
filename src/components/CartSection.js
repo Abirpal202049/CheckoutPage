@@ -54,7 +54,7 @@ export default function CartSection() {
           );
           setTimeout(() => {
             setIsExploding(false);
-          }, 6000);
+          }, 4200);
           setIsExploding(true);
           setDiscountCode("");
         } else {
@@ -79,13 +79,13 @@ export default function CartSection() {
     <div className="w-[50%] bg-skin-foreground/5 border-r border-skin-foreground border-opacity-10 relative overflow-auto">
       {isExploding && (
         <div className=" fixed top-0 left-0 right-0 bottom-0 z-50">
-          <Confetti numberOfPieces={1000} width={width} height={height} />
+          <Confetti width={width} height={height} />
         </div>
       )}
       <div className="bottom-0 absolute left-0 right-0">
         <Background className="w-[100%]" />
       </div>
-      <div className="max-w-[768px] float-right h-full bg-slate-100/0 right-0 top-0 bottom-0 text-skin-foreground p-10 px-20 ">
+      <div className="max-w-[768px] w-full float-right h-full bg-slate-100/0 right-0 top-0 bottom-0 text-skin-foreground p-10 px-20 ">
         {/*  Cart */}
         <CartList />
 

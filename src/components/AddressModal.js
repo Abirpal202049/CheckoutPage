@@ -26,34 +26,44 @@ export default function AddressModal({ setModalOpenFunc }) {
             placeholder="1131 Dusty Townline"
           />
 
-          <div className="flex gap-x-3">
-            <InputField
-              type="text"
-              label="State"
-              id="state"
-              placeholder="Texas"
-            />
-            <InputField
-              type="text"
-              label="Country"
-              id="country"
-              placeholder="United States"
-            />
+          <div className="flex w-[460px] gap-x-3">
+            <div className="w-[49%]">
+              <InputField
+                type="text"
+                label="State"
+                id="state"
+                placeholder="Texas"
+              />
+            </div>
+
+            <div className="w-[50%]">
+              <InputField
+                type="text"
+                label="Country"
+                id="country"
+                placeholder="United States"
+              />
+            </div>
           </div>
 
-          <div className="flex gap-x-3">
-            <InputField
-              type="text"
-              label="City"
-              id="city"
-              placeholder="Jacksonville"
-            />
-            <InputField
-              type="number"
-              label="Pincode"
-              id="pincode"
-              placeholder="40322"
-            />
+          <div className="flex w-[460px] gap-x-3">
+            <div className="w-[49%]">
+              <InputField
+                type="text"
+                label="City"
+                id="city"
+                placeholder="Jacksonville"
+              />
+            </div>
+
+            <div className="w-1/2">
+              <InputField
+                type="number"
+                label="Pincode"
+                id="pincode"
+                placeholder="40322"
+              />
+            </div>
           </div>
 
           <div>

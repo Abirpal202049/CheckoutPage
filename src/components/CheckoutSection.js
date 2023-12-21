@@ -59,7 +59,7 @@ export default function CheckoutSection() {
       )}
 
       {/* Checkout Form */}
-      <div className="max-w-[768px] h-full bg-slate-100/0 left-0 top-0 bottom-0 p-20 bg-skin-background">
+      <div className="max-w-[768px] w-full h-full bg-slate-100/0 left-0 top-0 bottom-0 p-20 bg-skin-background">
         <form className="flex flex-col pb-10">
           <InputField
             label="Email"
@@ -138,6 +138,7 @@ export default function CheckoutSection() {
                     />
                     <svg {...getCardImageProps({ images })} />
                   </div>
+                  <small>{erroredInputs.cardNumber && erroredInputs.cardNumber}</small>
                 </div>
 
                 <div className="flex gap-x-4 mt-2">
@@ -221,7 +222,7 @@ export default function CheckoutSection() {
                 </svg>
               </span>
             </label>
-            <label className="ml-2" htmlFor="billing_and_shipping">
+            <label className="ml-2 cursor-pointer" htmlFor="billing_and_shipping">
               Billing address is same as shipping
             </label>
           </div>

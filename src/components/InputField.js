@@ -9,7 +9,6 @@ export default function InputField({ label, type, id, placeholder, length }) {
         className="focus:outline-0 bg-skin-foreground/5 border px-5 py-3 border-skin-foreground/10 rounded-xl mt-2 mb-5 placeholder:text-skin-foreground/30 focus-within:border-skin-primary"
         type={type}
         id={id}
-        max={50}
       />
     </div>
   );

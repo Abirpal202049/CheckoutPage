@@ -6,9 +6,9 @@ export default function CartList() {
   const cart = useCartStore((state) => state.cart);
 
   return (
-    <>
+    <div >
       <h1 className="text-2xl font-bold">Your Order ({cart.length})</h1>
-      <div className="border rounded-xl border-skin-foreground/10 flex flex-col p-6 gap-y-10 my-5 bg-skin-background max-h-[40vh] overflow-auto">
+      <div className="border  rounded-xl border-skin-foreground/10 flex flex-col p-6 gap-y-10 my-5 bg-skin-background max-h-[40vh] overflow-auto">
         {cart.map((item) => {
           return (
             <div key={item.id} className="flex items-center gap-x-10">
@@ -40,6 +40,6 @@ export default function CartList() {
           );
         })}
       </div>
-    </>
+    </div>
   );
 }
