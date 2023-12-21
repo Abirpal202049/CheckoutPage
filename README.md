@@ -15,6 +15,13 @@ This project is a checkout page built using Next.js 14, leveraging the App Route
 
 - React Credit Card Validation: Integrate the React Credit Card Validation library to validate credit card information on the client side for a secure and user-friendly checkout experience.
 
+## Challenge's faced during the
+### Challenge 1: Integrating API in tailwind.config.js
+The initial attempt to call the API directly within the tailwind.config.js file to dynamically set theme colors proved unsuccessful. A different approach was taken by creating a ThemeWrapper component around the global layout. Using vanilla JavaScript, the theme properties were set before rendering, resolving the integration issue.
+
+### Challenge 2: Dynamic Logo Integration
+Integrating a dynamic logo from an API posed a challenge due to asynchronous loading requirements. The solution involved creating a Component that asynchronously fetched the logo URL from the API and updated the source once the API call was successful. This approach ensured proper handling of dynamic logos in the checkout page.
+
 ## Getting Started
 1. Clone the Repository:
 
