@@ -3,7 +3,7 @@ import InputField from "./InputField";
 
 export default function AddressModal({ setModalOpenFunc }) {
   return (
-    <div className="fixed w-[500px] bg-skin-background border rounded-xl border-skin-foreground/20 left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] shadow z-50">
+    <div className="fixed w-[90vw]  h-[500px] sm:h-max overflow-auto  sm:w-[500px] bg-skin-background border rounded-xl border-skin-foreground/20 left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] shadow z-50">
       <div className="p-3 px-5 border-b border-skin-foreground/20 flex items-center">
         <h1 className="text-base font-medium flex-1">Add New Address</h1>
         <Close
@@ -26,8 +26,8 @@ export default function AddressModal({ setModalOpenFunc }) {
             placeholder="1131 Dusty Townline"
           />
 
-          <div className="flex w-[460px] gap-x-3">
-            <div className="w-[49%]">
+          <div className="flex flex-col sm:flex-row sm:w-[460px] gap-x-3">
+            <div className="sm:w-[49%]">
               <InputField
                 type="text"
                 label="State"
@@ -36,7 +36,7 @@ export default function AddressModal({ setModalOpenFunc }) {
               />
             </div>
 
-            <div className="w-[50%]">
+            <div className="sm:w-[50%]">
               <InputField
                 type="text"
                 label="Country"
@@ -46,8 +46,8 @@ export default function AddressModal({ setModalOpenFunc }) {
             </div>
           </div>
 
-          <div className="flex w-[460px] gap-x-3">
-            <div className="w-[49%]">
+          <div className="flex flex-col sm:flex-row sm:w-[460px] gap-x-3">
+            <div className="sm:w-[49%]">
               <InputField
                 type="text"
                 label="City"
@@ -56,7 +56,7 @@ export default function AddressModal({ setModalOpenFunc }) {
               />
             </div>
 
-            <div className="w-1/2">
+            <div className="sm:w-1/2">
               <InputField
                 type="number"
                 label="Pincode"

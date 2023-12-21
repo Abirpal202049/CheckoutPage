@@ -76,7 +76,7 @@ export default function CartSection() {
   }, []);
 
   return (
-    <div className="w-[50%] bg-skin-foreground/5 border-r border-skin-foreground border-opacity-10 relative overflow-auto">
+    <div className="xl:w-[50%] bg-skin-foreground/5 xl:border-r border-skin-foreground border-opacity-10 relative overflow-auto xl:m-0 m-5 xl:rounded-none rounded-xl">
       {isExploding && (
         <div className=" fixed top-0 left-0 right-0 bottom-0 z-50">
           <Confetti width={width} height={height} />
@@ -85,7 +85,9 @@ export default function CartSection() {
       <div className="bottom-0 absolute left-0 right-0">
         <Background className="w-[100%]" />
       </div>
-      <div className="max-w-[768px] w-full float-right h-full bg-slate-100/0 right-0 top-0 bottom-0 text-skin-foreground p-10 px-20 ">
+
+      {/* Main Content */}
+      <div className="xl:max-w-[768px] w-full float-right h-full bg-slate-100/0 right-0 top-0 bottom-0 text-skin-foreground p-3 xl:p-10 xl:px-20 ">
         {/*  Cart */}
         <CartList />
 
@@ -96,24 +98,31 @@ export default function CartSection() {
             Discount Code
           </label>
           <div className="flex group border-2 border-skin-primary/20 focus-within:border-skin-primary px-4 py-3 rounded-xl gap-x-3 items-center my-2 ">
-            <DiscountCode className="fill-skin-primary w-7" />
-            <input
-              placeholder="GROWW10"
-              type="text"
-              value={discountCode}
-              onChange={(e) => setDiscountCode(e.target.value)}
-              name=""
-              id="discountCode"
-              className="bg-transparent flex-1 placeholder:font-medium placeholder:text-skin-foreground/30 focus:outline-0 font-medium uppercase"
-            />
-            <button
-              disabled={!discountCode ? true : false}
-              type="submit"
-              onClick={applyDiscount}
-              className="text-skin-primary disabled:text-skin-primary/60 font-medium cursor-pointer hover:text-skin-primary/80 transition-all duration-200 hover:scale-95"
-            >
-              Apply
-            </button>
+            <div className="w-7">
+              <DiscountCode className="fill-skin-primary w-7 " />
+            </div>
+
+            <div className="flex-1 flex ">
+              <input
+                placeholder="GROWW10"
+                type="text"
+                value={discountCode}
+                onChange={(e) => setDiscountCode(e.target.value)}
+                name=""
+                id="discountCode"
+                className="bg-transparent w-1/2 flex-1 placeholder:font-medium placeholder:text-skin-foreground/30 focus:outline-0 font-medium uppercase"
+              />
+            <div>
+              <button
+                disabled={!discountCode ? true : false}
+                type="submit"
+                onClick={applyDiscount}
+                className="text-skin-primary disabled:text-skin-primary/60 font-medium cursor-pointer hover:text-skin-primary/80 transition-all duration-200 hover:scale-95 "
+              >
+                Apply
+              </button>
+            </div>
+            </div>
           </div>
           {errorMessage ? (
             <small className="text-red-500 -mt-1 font-medium flex items-center gap-x-2">

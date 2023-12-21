@@ -10,11 +10,11 @@ import AddressModal from "./AddressModal";
 const paymentOptionImage = {
   UPI: {
     name: "UPI",
-    image: <UPI className="w-14 fill-skin-foreground" />,
+    image: <UPI className="w-11 sm:w-14 fill-skin-foreground" />,
   },
   CARDS: {
-    name: "Credit Card / Debit Card",
-    image: <Card className="w-10 fill-skin-foreground" />,
+    name: "Credit / Debit Card",
+    image: <Card className="w-7 sm:w-10 fill-skin-foreground" />,
   },
 };
 
@@ -43,7 +43,7 @@ export default function CheckoutSection() {
   const payableAmount = useCartStore((state) => state.payableAmount);
 
   return (
-    <div className="w-[50%] bg-skin-background relative overflow-auto">
+    <div className="xl:w-[50%] bg-skin-background relative overflow-auto">
       {/* New Address Pop Up */}
       {modalOpen && (
         <>
@@ -59,7 +59,7 @@ export default function CheckoutSection() {
       )}
 
       {/* Checkout Form */}
-      <div className="max-w-[768px] w-full h-full bg-slate-100/0 left-0 top-0 bottom-0 p-20 bg-skin-background">
+      <div className="xl:max-w-[768px] w-full h-full bg-slate-100/0 left-0 top-0 bottom-0 p-5 xl:p-20 bg-skin-background">
         <form className="flex flex-col pb-10">
           <InputField
             label="Email"
@@ -110,7 +110,7 @@ export default function CheckoutSection() {
                           }  `}
                         ></div>
                       </div>
-                      <div className="flex-1 font-semibold text-base">
+                      <div className="flex-1 font-semibold text-xs sm:text-base">
                         {paymentOptionImage[option].name}
                       </div>
                       <div>{paymentOptionImage[option].image}</div>
@@ -141,8 +141,8 @@ export default function CheckoutSection() {
                   <small>{erroredInputs.cardNumber && erroredInputs.cardNumber}</small>
                 </div>
 
-                <div className="flex gap-x-4 mt-2">
-                  <div className="w-[50%] flex flex-col">
+                <div className="flex flex-col sm:flex-row gap-x-4 mt-2">
+                  <div className="sm:w-[50%] flex flex-col">
                     <label className="font-semibold text-base">
                       Valid Till
                     </label>
@@ -152,7 +152,7 @@ export default function CheckoutSection() {
                     />
                   </div>
 
-                  <div className="w-[50%] flex flex-col">
+                  <div className="sm:w-[50%] flex flex-col">
                     <label className="font-semibold text-base" htmlFor="cvv">
                       CVV
                     </label>

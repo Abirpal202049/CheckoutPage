@@ -28,7 +28,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex gap-x-6 items-center">
-            <Setting className="stroke-skin-foreground stroke-[2px] w-7 cursor-pointer" />
+            {/* <Setting className="stroke-skin-foreground stroke-[2px] w-7 cursor-pointer" /> */}
             <div className="relative cursor-pointer">
               <Cart className="stroke-skin-foreground stroke-[2px] w-7" />
               {cart.length > 0 && (

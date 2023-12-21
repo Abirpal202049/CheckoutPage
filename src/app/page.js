@@ -46,7 +46,7 @@ export default function Home() {
   }, [isLoading]);
 
   return (
-    <div className="flex h-[calc(100vh-83px)]">
+    <div className="flex flex-col xl:flex-row xl:h-[calc(100vh-83px)]">
       {cart.length > 0 ? (
         <>
           <CartSection />
@@ -54,7 +54,7 @@ export default function Home() {
         </>
       ) : (
         <>
-          <div className="flex relative items-center justify-center w-full">
+          <div className="flex relative items-center justify-center w-screen h-[calc(100vh-83px)]">
             <div className="bottom-0 absolute left-0 right-0 -z-10">
               <Background className="w-[100%]" />
             </div>
@@ -67,16 +67,16 @@ export default function Home() {
               <div className="flex items-center -gap-x-10">
                 <div className="flex flex-col text-center justify-center items-center gap-y-5">
                   <div className="flex items-center">
-                    <Cart className="w-16 stroke-skin-foreground stroke-2 stroke-skin-primary" />
+                    <Cart className="w-10 sm:w-16 stroke-2 stroke-skin-primary" />
 
-                    <h1 className="text-2xl text-skin-foreground">
+                    <h1 className="text-lg sm:text-2xl text-skin-foreground">
                       Cart is Empty
                     </h1>
                   </div>
                   {/* Add a reload -> Start shopping */}
 
                   <button
-                    className="rounded-xl bg-skin-primary px-28 py-3 text-center text-lg font-semibold shadow-sm text-skin-primary-foreground hover:bg-skin-primary/80 hover:text-skin-foreground transition-all duration-200 "
+                    className="rounded-xl bg-skin-primary px-20 sm:px-28 py-2 sm:py-3 text-center text-lg font-semibold shadow-sm text-skin-primary-foreground hover:bg-skin-primary/80 hover:text-skin-foreground transition-all duration-200 "
                     onClick={refreshData}
                   >
                     Reload
