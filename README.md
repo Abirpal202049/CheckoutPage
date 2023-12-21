@@ -28,6 +28,7 @@ Integrating a dynamic logo from an API posed a challenge due to asynchronous loa
 ```
 git clone https://github.com/your-username/checkout-page.git
 ```
+
 ```
 cd checkout-page
 ```
