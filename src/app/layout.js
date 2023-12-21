@@ -3,6 +3,7 @@ import "./globals.css";
 import ThemeWrapperContext from "@/context/ThemeWrapperContext";
 import Navbar from "@/components/Navbar";
 import QueryProviderWrapper from "@/context/QueryProviderWrapper";
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
           <ThemeWrapperContext>
             <Navbar />
             {children}
+            <Toaster />
           </ThemeWrapperContext>
         </QueryProviderWrapper>
       </body>
