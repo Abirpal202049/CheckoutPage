@@ -3,17 +3,22 @@ import useAddressStore from "@/store/addressStore";
 import Close from "../../public/icons/close-circle.svg";
 import InputField from "./InputField";
 import { useForm } from "react-hook-form";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function AddressModal({ setModalOpenFunc }) {
-  const { handleSubmit, register, reset } = useForm();
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm();
   const insertAddress = useAddressStore((state) => state.insertAddress);
 
   const onSubmit = (data) => {
-    console.log(data)
-    insertAddress(data);
+    insertAddress({...data, aid: uuidv4()});
     setModalOpenFunc(false);
     reset();
-  }
+  };
   return (
     <div className="fixed w-[90vw]  h-[500px] sm:h-max overflow-auto  sm:w-[500px] bg-skin-background border rounded-xl border-skin-foreground/20 left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] shadow z-50">
       <div className="p-3 px-5 border-b border-skin-foreground/20 flex items-center">
@@ -31,6 +36,18 @@ export default function AddressModal({ setModalOpenFunc }) {
             label="Address"
             id="address"
             placeholder="1131 Dusty Townline, Jacksonville, TX 40322"
+            errors={errors}
+            validationSchema={{
+              required: "This field is required",
+              maxLength: {
+                value: 500,
+                message: "Max length is 500 characters",
+              },
+              minLength: {
+                value: 10,
+                message: "Min length is 10 characters",
+              },
+            }}
           />
           <InputField
             register={register}
@@ -38,6 +55,14 @@ export default function AddressModal({ setModalOpenFunc }) {
             label="House Name / Flat No"
             id="house_name"
             placeholder="1131 Dusty Townline"
+            errors={errors}
+            validationSchema={{
+              required: "This field is required",
+              maxLength: {
+                value: 50,
+                message: "Max length exceeds",
+              },
+            }}
           />
 
           <div className="flex flex-col sm:flex-row sm:w-[460px] gap-x-3">
@@ -48,6 +73,14 @@ export default function AddressModal({ setModalOpenFunc }) {
                 label="State"
                 id="state"
                 placeholder="Texas"
+                errors={errors}
+                validationSchema={{
+                  required: "This field is required",
+                  maxLength: {
+                    value: 70,
+                    message: "Max length exceeds",
+                  },
+                }}
               />
             </div>
 
@@ -58,6 +91,14 @@ export default function AddressModal({ setModalOpenFunc }) {
                 label="Country"
                 id="country"
                 placeholder="United States"
+                errors={errors}
+                validationSchema={{
+                  required: "This field is required",
+                  maxLength: {
+                    value: 70,
+                    message: "Max length exceeds",
+                  },
+                }}
               />
             </div>
           </div>
@@ -70,6 +111,14 @@ export default function AddressModal({ setModalOpenFunc }) {
                 label="City"
                 id="city"
                 placeholder="Jacksonville"
+                errors={errors}
+                validationSchema={{
+                  required: "This field is required",
+                  maxLength: {
+                    value: 70,
+                    message: "Max length exceeds",
+                  },
+                }}
               />
             </div>
 
@@ -79,18 +128,34 @@ export default function AddressModal({ setModalOpenFunc }) {
                 type="number"
                 label="Pincode"
                 id="pincode"
-                placeholder="40322"
+                placeholder="403221"
+                max={999999}
+                min={100000}
+                errors={errors}
+                validationSchema={{
+                  required: "This field is required",
+                  maxLength: {
+                    value: 6,
+                    message: "Max length exceeds",
+                  },
+                  minLength: {
+                    value: 6,
+                    message: "Min length is 6 characters",
+                  },
+                }}
               />
             </div>
           </div>
 
           <div>
             <InputField
+              className="uppercase"
               register={register}
               type="text"
               label="Tag"
               id="tag"
               placeholder="House / Office"
+              errors={errors}
             />
           </div>
         </div>

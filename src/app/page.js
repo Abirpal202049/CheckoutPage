@@ -22,7 +22,6 @@ export default function Home() {
         "https://groww-intern-assignment.vercel.app/v1/api/order-details"
       );
       const data = await res.json();
-      console.log("Data of Cart TANSTACK", data);
       return data;
     },
   });
@@ -33,12 +32,10 @@ export default function Home() {
 
   useEffect(() => {
     if (!isLoading) {
-      console.log("Data of Cart ", data);
       const totalPayableAmount = data.products.reduce(
         (acc, item) => acc + item.price * item.quantity,
         0
       );
-      console.log("Total Payment Amount", totalPayableAmount);
       setTotalAmount(totalPayableAmount);
       setCart(data.products);
       setPaymentMethods(data.paymentMethods);

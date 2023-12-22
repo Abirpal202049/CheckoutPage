@@ -3,12 +3,15 @@ import InputField from "./InputField";
 import useCartStore from "@/store/cartStore";
 import Card from "../../public/icons/card.svg";
 import UPI from "../../public/icons/upi.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCreditCardValidator, images } from "react-creditcard-validator";
 import AddressModal from "./AddressModal";
 import { useForm } from "react-hook-form";
 import useAddressStore from "@/store/addressStore";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { v4 as uuidv4 } from 'uuid';
+import useUserStore from "@/store/userStore";
 
 const paymentOptionImage = {
   UPI: {
@@ -22,7 +25,13 @@ const paymentOptionImage = {
 };
 
 export default function CheckoutSection() {
-  const { handleSubmit, register, reset } = useForm();
+  const router = useRouter();
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm();
 
   function expDateValidate(month, year) {
     if (Number(year) > 2035) {
@@ -46,20 +55,40 @@ export default function CheckoutSection() {
   const [modalOpen, setModalOpen] = useState(false);
   const payableAmount = useCartStore((state) => state.payableAmount);
   const allAddress = useAddressStore((state) => state.address);
+  const setOrder = useUserStore((state) => state.setUser);
 
-  console.log("JSON ADDRESS DATA: ", allAddress);
   const [selectedAddress, setSelectedAddress] = useState(
-    allAddress[0]?.house_name || ""
+    allAddress[0]?.aid || ""
   );
 
   const onSubmit = (data) => {
     const filterAddress = allAddress.filter(
-      (address) => address.house_name === selectedAddress
+      (address) => address.aid === selectedAddress
     )[0];
-    console.log("Main Data ", { data, filterAddress });
-    reset();
+    if (data.bill_and_ship_status) {
+      const orderSummery = {
+        ...data,
+        billingAddress: filterAddress,
+        shippingAddress: filterAddress,
+        orderId : uuidv4()
+      };
+      console.log("Order Summery: ", orderSummery);
+      setOrder(orderSummery);
+      router.push(`/${orderSummery?.orderId}`);
+    } else {
+      const orderSummery = { ...data, billingAddress: filterAddress, orderId : uuidv4() };
+      console.log("Order Summery: ", orderSummery);
+      setOrder(orderSummery);
+      router.push(`/${orderSummery?.orderId}`);
+    }
+    // reset();
     toast.success("Payment Successful");
+    // redirect to checkout page
   };
+
+  useEffect(() => {
+    setSelectedAddress(allAddress[0]?.aid || "");
+  }, [allAddress[0]?.aid]);
 
   return (
     <div className="xl:w-[50%] bg-skin-background relative overflow-auto">
@@ -86,13 +115,30 @@ export default function CheckoutSection() {
             type="email"
             id="personEmail"
             placeholder="joylawson@gmail.com"
+            errors={errors}
+            validationSchema={{
+              required: "This field is required",
+              pattern: {
+                value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                message: "Invalid Email Address",
+              },
+            }}
           />
           <InputField
             register={register}
             label="Phone Number"
-            type="number"
+            type="tel"
             id="personPhone"
             placeholder="(201) 830-8210"
+            maxLength={10}
+            errors={errors}
+            validationSchema={{
+              required: "This field is required",
+              pattern: {
+                value: /^[0-9]{10}$/,
+                message: "Invalid Phone Number",
+              },
+            }}
           />
 
           {/* Payment Module */}
@@ -150,6 +196,15 @@ export default function CheckoutSection() {
                   type="text"
                   id="card_holder_name"
                   placeholder="Ex. Jane Cooper"
+                  errors={errors}
+                  validationSchema={{
+                    required: "This field is required",
+                    maxLength: {
+                      value: 100,
+                      message: "Max length exceeds",
+                    },
+                  }}
+                  className={"uppercase"}
                 />
                 <div className="flex flex-col">
                   <label className="font-semibold text-base">Card Number</label>
@@ -198,6 +253,18 @@ export default function CheckoutSection() {
                   type="text"
                   id="upi_id"
                   placeholder="Ex. 12345@bankname"
+                  errors={errors}
+                  validationSchema={{
+                    required: "This field is required",
+                    maxLength: {
+                      value: 100,
+                      message: "Max length exceeds",
+                    },
+                    pattern: {
+                      value: /[\.\-a-z0-9]+@[a-z]+/gm,
+                      message: "Invalid UPI ID",
+                    },
+                  }}
                 />
               </>
             )}
@@ -228,14 +295,14 @@ export default function CheckoutSection() {
                   + Add new billing address
                 </div>
               ) : (
-                <div class="max-h-80 overflow-auto mt-2 mb-5 border rounded-xl p-4 border-skin-foreground/20 flex flex-col gap-y-5">
+                <div className="xl:max-h-80 xl:overflow-auto mt-2 mb-5 border rounded-xl p-4 border-skin-foreground/20 flex flex-col gap-y-5">
                   {allAddress.map((address, index) => {
                     return (
                       <div
-                        onClick={() => setSelectedAddress(address.house_name)}
+                        onClick={() => setSelectedAddress(address.aid)}
                         key={index}
                         className={`flex cursor-pointer border-2 flex-col gap-y-2 ${
-                          selectedAddress === address.house_name
+                          selectedAddress === address.aid
                             ? "border-skin-primary"
                             : "border-transparent"
                         } p-3 rounded-xl`}
@@ -283,6 +350,7 @@ export default function CheckoutSection() {
               htmlFor="billing_and_shipping"
             >
               <input
+                {...register("bill_and_ship_status")}
                 type="checkbox"
                 className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-skin-bg-skin-primary checked:bg-skin-primary checked:before:bg-skin-primary hover:before:opacity-10"
                 id="billing_and_shipping"
@@ -290,7 +358,7 @@ export default function CheckoutSection() {
               <span className="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-3.5 w-3.5"
+                  className="h-3.5 w-3.5"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                   stroke="currentColor"

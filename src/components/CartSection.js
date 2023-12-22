@@ -27,7 +27,6 @@ export default function CartSection() {
   const calculateTotal = useCartStore((state) => state.totalAmount);
   const payableAmount = useCartStore((state) => state.payableAmount);
   const setPayableAmount = useCartStore((state) => state.setPayableAmount);
-  console.log("AMOUNT ", calculateTotal);
 
   const applyDiscount = (e) => {
     try {
@@ -71,7 +70,6 @@ export default function CartSection() {
   };
 
   useEffect(() => {
-    console.log("Payable Amount ", calculateTotal);
     setPayableAmount(calculateTotal + shippingCost);
   }, []);
 

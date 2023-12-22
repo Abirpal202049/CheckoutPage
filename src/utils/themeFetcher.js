@@ -4,7 +4,6 @@ export async function makeAPICall() {
     "https://groww-intern-assignment.vercel.app/v1/api/merchant-metadata"
   );
   const data = await response.json();
-  console.log("Data from utils ", data);
 
   const themeRes = data.theme;
   document.documentElement.style.setProperty(
