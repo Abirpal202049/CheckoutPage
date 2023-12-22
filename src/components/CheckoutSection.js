@@ -10,8 +10,9 @@ import { useForm } from "react-hook-form";
 import useAddressStore from "@/store/addressStore";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import useUserStore from "@/store/userStore";
+import ErrorIcon from "../../public/icons/info-circle.svg";
 
 const paymentOptionImage = {
   UPI: {
@@ -56,34 +57,41 @@ export default function CheckoutSection() {
   const payableAmount = useCartStore((state) => state.payableAmount);
   const allAddress = useAddressStore((state) => state.address);
   const setOrder = useUserStore((state) => state.setUser);
-
+  const [billingError, setBillingError] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(
     allAddress[0]?.aid || ""
   );
 
   const onSubmit = (data) => {
-    const filterAddress = allAddress.filter(
-      (address) => address.aid === selectedAddress
-    )[0];
-    if (data.bill_and_ship_status) {
-      const orderSummery = {
-        ...data,
-        billingAddress: filterAddress,
-        shippingAddress: filterAddress,
-        orderId : uuidv4()
-      };
-      console.log("Order Summery: ", orderSummery);
-      setOrder(orderSummery);
-      router.push(`/${orderSummery?.orderId}`);
-    } else {
-      const orderSummery = { ...data, billingAddress: filterAddress, orderId : uuidv4() };
-      console.log("Order Summery: ", orderSummery);
-      setOrder(orderSummery);
-      router.push(`/${orderSummery?.orderId}`);
+    if (allAddress.length > 0) {
+      const filterAddress = allAddress.filter(
+        (address) => address.aid === selectedAddress
+      )[0];
+      if (data.bill_and_ship_status) {
+        const orderSummery = {
+          ...data,
+          billingAddress: filterAddress,
+          shippingAddress: filterAddress,
+          orderId: uuidv4(),
+        };
+        console.log("Order Summery: ", orderSummery);
+        setOrder(orderSummery);
+        router.push(`/${orderSummery?.orderId}`);
+      } else {
+        const orderSummery = {
+          ...data,
+          billingAddress: filterAddress,
+          orderId: uuidv4(),
+        };
+        console.log("Order Summery: ", orderSummery);
+        setOrder(orderSummery);
+        router.push(`/${orderSummery?.orderId}`);
+      }
+      reset();
+      toast.success("Payment Successful");
+    }else{
+      setBillingError(true);
     }
-    // reset();
-    toast.success("Payment Successful");
-    // redirect to checkout page
   };
 
   useEffect(() => {
@@ -216,9 +224,15 @@ export default function CheckoutSection() {
                     />
                     <svg {...getCardImageProps({ images })} />
                   </div>
-                  <small>
-                    {erroredInputs.cardNumber && erroredInputs.cardNumber}
-                  </small>
+
+                  {erroredInputs.cardNumber ? (
+                    <small className="text-red-500 font-medium flex items-center gap-x-2">
+                      <ErrorIcon />
+                      {erroredInputs.cardNumber}
+                    </small>
+                  ) : (
+                    <small className="h-[21px] mt-[2px] "></small>
+                  )}
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-x-4 mt-2">
@@ -231,6 +245,14 @@ export default function CheckoutSection() {
                       className="focus:outline-0 bg-skin-foreground/5 border px-5 py-3 border-skin-foreground/10 rounded-xl mt-2 mb-5 placeholder:text-skin-foreground/30 focus-within:border-skin-primary"
                       {...getExpiryDateProps()}
                     />
+                    {erroredInputs.expiryDate ? (
+                      <small className="text-red-500 font-medium flex items-center gap-x-2 -mt-3">
+                        <ErrorIcon />
+                        {erroredInputs.expiryDate}
+                      </small>
+                    ) : (
+                      <small className="h-[21px]"></small>
+                    )}
                   </div>
 
                   <div className="sm:w-[50%] flex flex-col">
@@ -242,6 +264,14 @@ export default function CheckoutSection() {
                       className="focus:outline-0 bg-skin-foreground/5 border px-5 py-3 border-skin-foreground/10 rounded-xl mt-2 mb-5 placeholder:text-skin-foreground/30 focus-within:border-skin-primary"
                       {...getCVCProps()}
                     />
+                    {erroredInputs.cvc ? (
+                      <small className="text-red-500 font-medium flex items-center gap-x-2 -mt-3">
+                        <ErrorIcon />
+                        {erroredInputs.cvc}
+                      </small>
+                    ) : (
+                      <small className="h-[21px]"></small>
+                    )}
                   </div>
                 </div>
               </>
@@ -288,12 +318,22 @@ export default function CheckoutSection() {
               </div>
 
               {allAddress.length <= 0 ? (
-                <div
-                  onClick={() => setModalOpen(true)}
-                  className="mt-2 mb-5 border-dashed border-2 bg-skin-foreground/5 border-skin-foreground/10 h-40  rounded-xl flex justify-center items-center font-medium text-lg text-skin-foreground/30 cursor-pointer hover:bg-skin-primary-foreground/10 hover:border-skin-primary hover:text-skin-primary transition-all duration-200"
-                >
-                  + Add new billing address
-                </div>
+                <>
+                  <div
+                    onClick={() => setModalOpen(true)}
+                    className="mt-2 mb-5 border-dashed border-2 bg-skin-foreground/5 border-skin-foreground/10 h-40  rounded-xl flex justify-center items-center font-medium text-lg text-skin-foreground/30 cursor-pointer hover:bg-skin-primary-foreground/10 hover:border-skin-primary hover:text-skin-primary transition-all duration-200"
+                  >
+                    + Click here to add new billing address
+                  </div>
+                  {billingError ? (
+                    <small className="text-red-500 font-medium flex items-center gap-x-2 -mt-4 mb-5">
+                      <ErrorIcon />
+                      This field is required
+                    </small>
+                  ) : (
+                    <small className="h-[21px] -mt-4 mb-5"></small>
+                  )}
+                </>
               ) : (
                 <div className="xl:max-h-80 xl:overflow-auto mt-2 mb-5 border rounded-xl p-4 border-skin-foreground/20 flex flex-col gap-y-5">
                   {allAddress.map((address, index) => {
