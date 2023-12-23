@@ -355,7 +355,7 @@ export default function CheckoutSection() {
                 <>
                   <div
                     onClick={() => setModalOpen(true)}
-                    className="mt-2 mb-5 border-dashed border-2 bg-skin-foreground/5 border-skin-foreground/10 h-40  rounded-xl flex justify-center items-center font-medium text-lg text-skin-foreground/30 cursor-pointer hover:bg-skin-primary-foreground/10 hover:border-skin-primary hover:text-skin-primary transition-all duration-200"
+                    className="mt-2 mb-5 border-dashed border-2 bg-skin-foreground/5 border-skin-foreground/10 h-40  rounded-xl flex justify-center items-center font-medium text-lg text-skin-foreground/30 cursor-pointer hover:bg-skin-primary-foreground/10 hover:border-skin-primary hover:text-skin-primary transition-all duration-200 text-center"
                   >
                     + Click here to add new billing address
                   </div>
