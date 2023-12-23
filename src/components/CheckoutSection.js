@@ -14,6 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 import useUserStore from "@/store/userStore";
 import ErrorIcon from "../../public/icons/info-circle.svg";
 
+// Payment Options related Images
 const paymentOptionImage = {
   UPI: {
     name: "UPI",
@@ -32,15 +33,16 @@ export default function CheckoutSection() {
     register,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm(); // Using the react hook form
 
+  // Function to validate the expiry date
   function expDateValidate(month, year) {
     if (Number(year) > 2035) {
       return "Expiry Date Year cannot be greater than 2035";
     }
     return;
   }
-
+  // Validating the credit card field
   const {
     getCardNumberProps,
     getCardImageProps,
@@ -49,51 +51,74 @@ export default function CheckoutSection() {
     meta: { erroredInputs },
   } = useCreditCardValidator({ expiryDateValidator: expDateValidate });
 
+  // Zustand States
   const paymentOption = useCartStore((state) => state.paymentMethod);
+  const payableAmount = useCartStore((state) => state.payableAmount);
+  const allAddress = useAddressStore((state) => state.address);
+  const setOrder = useUserStore((state) => state.setUser);
+  const userCart = useCartStore((state) => state.cart);
+  const totalCartAmount = useCartStore((state) => state.totalAmount);
+
+  // Local States
   const [currentPaymentOption, setCurrentPaymentOption] = useState(
     paymentOption[0]
   );
   const [modalOpen, setModalOpen] = useState(false);
-  const payableAmount = useCartStore((state) => state.payableAmount);
-  const allAddress = useAddressStore((state) => state.address);
-  const setOrder = useUserStore((state) => state.setUser);
   const [billingError, setBillingError] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(
     allAddress[0]?.aid || ""
   );
 
+  // Handling submit function
   const onSubmit = (data) => {
+    // If any address is present continue processing
     if (allAddress.length > 0) {
+      // Filter out the address based on the selected address
       const filterAddress = allAddress.filter(
         (address) => address.aid === selectedAddress
       )[0];
+
+      // If billing and shipping address is same
       if (data.bill_and_ship_status) {
+        // Create a object with the order summery and user shoppingCart details and total and payableAmount
         const orderSummery = {
           ...data,
           billingAddress: filterAddress,
           shippingAddress: filterAddress,
           orderId: uuidv4(),
+          cart: userCart,
+          totalCartAmount,
+          payableAmount,
+          orderDate : Date.now(),
         };
         console.log("Order Summery: ", orderSummery);
-        setOrder(orderSummery);
-        router.push(`/${orderSummery?.orderId}`);
+        setOrder(orderSummery); // Setting it to the global state
+        router.push(`/${orderSummery?.orderId}`); // Navigating to the orderConfirmationPage
       } else {
+        // Create a object with the order summery and user shoppingCart details and total and payableAmount
         const orderSummery = {
           ...data,
           billingAddress: filterAddress,
           orderId: uuidv4(),
+          cart: userCart,
+          totalCartAmount,
+          payableAmount,
+          orderDate : Date.now(),
         };
         console.log("Order Summery: ", orderSummery);
-        setOrder(orderSummery);
-        router.push(`/${orderSummery?.orderId}`);
+        setOrder(orderSummery); // Setting it to the global state
+        router.push(`/${orderSummery?.orderId}`); // Navigating to the orderConfirmationPage
       }
-      reset();
-      toast.success("Payment Successful");
-    }else{
-      setBillingError(true);
+      // reset(); // Reset the form state
+
+      // TODO: Need to customize this form
+      toast.success("Payment Successful"); // Open a popup with the success message
+    } else {
+      setBillingError(true); // If no billing address is present show the error message
     }
   };
 
+  // Set the default to the first address
   useEffect(() => {
     setSelectedAddress(allAddress[0]?.aid || "");
   }, [allAddress[0]?.aid]);
@@ -117,6 +142,18 @@ export default function CheckoutSection() {
       {/* Checkout Form */}
       <div className="xl:max-w-[768px] w-full h-full bg-slate-100/0 left-0 top-0 bottom-0 p-5 xl:p-20 bg-skin-background">
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col pb-10">
+          <InputField
+            register={register}
+            label="Name"
+            type="text"
+            id="username"
+            placeholder="John Smith"
+            errors={errors}
+            validationSchema={{
+              required: "This field is required",
+            }}
+          />
+
           <InputField
             register={register}
             label="Email"
@@ -218,9 +255,8 @@ export default function CheckoutSection() {
                   <label className="font-semibold text-base">Card Number</label>
                   <div className="flex group border focus-within:border-skin-primary px-4 py-2 rounded-xl gap-x-3 items-center my-2 bg-skin-foreground/5 border-skin-foreground/10">
                     <input
-                      {...register("card_number")}
                       className="bg-transparent flex-1 placeholder:text-skin-foreground/30  focus:outline-0 py-1"
-                      {...getCardNumberProps()}
+                      {...getCardNumberProps({ ...register("card_number") })}
                     />
                     <svg {...getCardImageProps({ images })} />
                   </div>
@@ -241,9 +277,8 @@ export default function CheckoutSection() {
                       Valid Till
                     </label>
                     <input
-                      {...register("expiry_date")}
                       className="focus:outline-0 bg-skin-foreground/5 border px-5 py-3 border-skin-foreground/10 rounded-xl mt-2 mb-5 placeholder:text-skin-foreground/30 focus-within:border-skin-primary"
-                      {...getExpiryDateProps()}
+                      {...getExpiryDateProps({ ...register("expiry_date") })}
                     />
                     {erroredInputs.expiryDate ? (
                       <small className="text-red-500 font-medium flex items-center gap-x-2 -mt-3">
@@ -260,9 +295,8 @@ export default function CheckoutSection() {
                       CVV
                     </label>
                     <input
-                      {...register("cvv")}
                       className="focus:outline-0 bg-skin-foreground/5 border px-5 py-3 border-skin-foreground/10 rounded-xl mt-2 mb-5 placeholder:text-skin-foreground/30 focus-within:border-skin-primary"
-                      {...getCVCProps()}
+                      {...getCVCProps({ ...register("cvv") })}
                     />
                     {erroredInputs.cvc ? (
                       <small className="text-red-500 font-medium flex items-center gap-x-2 -mt-3">
